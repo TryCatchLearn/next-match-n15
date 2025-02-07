@@ -1,21 +1,25 @@
-import {GiMatchTip} from 'react-icons/gi';
-import {Navbar, NavbarBrand, NavbarContent} from '@heroui/navbar';
+import { GiMatchTip } from 'react-icons/gi';
+import { Navbar, NavbarBrand, NavbarContent } from '@heroui/navbar';
 import Link from 'next/link';
-import {Button} from '@heroui/button';
+import { Button } from '@heroui/button';
 import NavLink from './NavLink';
+import { auth } from '@/auth';
+import UserMenu from './UserMenu';
 
-export default function TopNav() {
+export default async function TopNav() {
+    const session = await auth();
+
     return (
         <Navbar maxWidth={'xl'}
-                className="bg-gradient-to-r from-purple-400 to-purple-700"
-                classNames={{
-                    item: [
-                        'text-xl',
-                        'text-white',
-                        'uppercase',
-                        'data-[active=true]:text-yellow-200'
-                    ]
-                }}
+            className="bg-gradient-to-r from-purple-400 to-purple-700"
+            classNames={{
+                item: [
+                    'text-xl',
+                    'text-white',
+                    'uppercase',
+                    'data-[active=true]:text-yellow-200'
+                ]
+            }}
         >
             <NavbarBrand as={Link} href='/'>
                 <GiMatchTip size={40} className="text-gray-200" />
@@ -30,8 +34,15 @@ export default function TopNav() {
                 <NavLink href='/messages' label='messages' />
             </NavbarContent>
             <NavbarContent justify="end">
-                <Button as={Link} href='/login' variant='bordered' className={'text-white'}>Login</Button>
-                <Button as={Link} href='/register' variant='bordered' className={'text-white'}>Register</Button>
+                {session?.user ? (
+                    <UserMenu user={session.user} />
+                ) : (
+                    <>
+                        <Button as={Link} href={'/login'} variant={'bordered'} className={'text-white'}>Login</Button>
+                        <Button as={Link} href={'/register'} variant={'bordered'}
+                            className={'text-white'}>Register</Button>
+                    </>
+                )}
             </NavbarContent>
         </Navbar>
     );
