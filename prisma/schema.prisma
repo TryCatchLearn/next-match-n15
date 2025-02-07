@@ -6,10 +6,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 model Account {
-  id                String @id @default(cuid())
   userId            String
+  id                String  @id @default(cuid())
   type              String
   provider          String
   providerAccountId String
@@ -20,18 +20,44 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   passwordHash  String
   image         String?
   accounts      Account[]
+  member        Member?
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  name        String
+  gender      String
+  dateOfBirth DateTime
+  created     DateTime @default(now())
+  updated     DateTime @default(now())
+  description String
+  city        String
+  country     String
+  image       String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos      Photo[]
+}
+
+model Photo {
+  id       String  @id @default(cuid())
+  url      String
+  publicId String?
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }

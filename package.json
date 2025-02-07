@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.3.1",
     "bcryptjs": "^2.4.3",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.0.6",
     "next": "15.1.6",
     "next-auth": "^5.0.0-beta.25",
@@ -35,6 +36,10 @@
     "postcss": "^8",
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
