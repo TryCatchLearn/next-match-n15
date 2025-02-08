@@ -1,13 +1,13 @@
 'use client';
 
-import {Session} from 'next-auth';
 import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/dropdown';
 import {Avatar} from '@heroui/avatar';
 import Link from 'next/link';
 import { signOutUser } from '@/app/actions/authActions';
+import { transformImageUrl } from '@/lib/util';
 
 type Props = {
-    user: Session['user'],
+    user: {name: string | null; image: string | null} | null
 }
 
 export default function UserMenu({user}: Props) {
@@ -21,7 +21,7 @@ export default function UserMenu({user}: Props) {
                     color='secondary'
                     name={user?.name || 'user avatar'}
                     size='sm'
-                    src={user?.image || '/images/user.png'}
+                    src={transformImageUrl(user?.image) || '/images/user.png'}
                 />
             </DropdownTrigger>
             <DropdownMenu variant='flat' aria-label='user actions menu'>
