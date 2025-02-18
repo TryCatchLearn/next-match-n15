@@ -1,30 +1,32 @@
 'use client';
 
 import clsx from 'clsx';
-import {Avatar} from '@heroui/avatar';
-import {transformImageUrl} from '@/lib/util';
-import {useEffect, useRef} from 'react';
+import { timeAgo, transformImageUrl } from '@/lib/util';
+import { useEffect, useRef } from 'react';
 import { MessageDto } from '@/lib/types';
+import PresenceAvatar from '@/components/PresenceAvatar';
 
 type Props = {
     message: MessageDto;
     currentUserId: string;
 }
 
-export default function MessageBox({message, currentUserId}: Props) {
+export default function MessageBox({ message, currentUserId }: Props) {
     const isCurrentUserSender = message.senderId === currentUserId;
     const messageEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (messageEndRef.current) messageEndRef.current.scrollIntoView({behavior: 'smooth'});
+        if (messageEndRef.current) messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [messageEndRef]);
 
     const renderAvatar = () => (
-         <Avatar
-            name={message.senderName}
-            className="self-end"
-            src={transformImageUrl(message.senderImage) || '/images/user.png'}
-        />
+        <div className='self-end'>
+            <PresenceAvatar
+                src={transformImageUrl(message.senderImage) || '/images/user.png'}
+                userId={message.senderId}
+            />
+        </div>
+
     );
 
     const messageContentClasses = clsx(
@@ -40,7 +42,7 @@ export default function MessageBox({message, currentUserId}: Props) {
             'justify-between': isCurrentUserSender,
         })}>
             {message.dateRead && message.recipientId !== currentUserId ? (
-                <span className='text-xs text-black text-italic'>(Read 4 mins ago)</span>
+                <span className='text-xs text-black text-italic'>(Read {timeAgo(message.dateRead)})</span>
             ) : <div />}
             <div className='flex'>
                 <span className='text-sm font-semibold text-gray-900'>{message.senderName}</span>
@@ -50,8 +52,8 @@ export default function MessageBox({message, currentUserId}: Props) {
     )
 
     const renderMessageContent = () => {
-       return <div className={messageContentClasses}>
-           {renderMessageHeader()}
+        return <div className={messageContentClasses}>
+            {renderMessageHeader()}
             <p className='text-sm py-3 text-gray-900'>{message.text}</p>
         </div>
     }

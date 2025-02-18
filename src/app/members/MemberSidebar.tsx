@@ -1,20 +1,21 @@
 'use client';
 
-import {Member} from '@prisma/client';
-import {Card, CardBody, CardFooter} from '@heroui/card';
-import {Image} from '@heroui/image';
-import {calculateAge, transformImageUrl} from '@/lib/util';
-import {Divider} from '@heroui/divider';
+import { Member } from '@prisma/client';
+import { Card, CardBody, CardFooter } from '@heroui/card';
+import { Image } from '@heroui/image';
+import { calculateAge, transformImageUrl } from '@/lib/util';
+import { Divider } from '@heroui/divider';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {Button} from '@heroui/button';
+import { usePathname } from 'next/navigation';
+import { Button } from '@heroui/button';
+import PresenceDot from '@/components/PresenceDot';
 
 type Props = {
     member: Member
-    navLinks: {name: string, href: string}[]
+    navLinks: { name: string, href: string }[]
 }
 
-export default function MemberSidebar({member, navLinks}: Props) {
+export default function MemberSidebar({ member, navLinks }: Props) {
     const pathname = usePathname();
 
 
@@ -27,11 +28,17 @@ export default function MemberSidebar({member, navLinks}: Props) {
                 alt='User profile main image'
                 className='rounded-full mt-6 aspect-square object-cover'
             />
-            <CardBody>
+            <CardBody className='overflow-hidden'>
                 <div className='flex flex-col items-center'>
-                    <div className='text-2xl'>
-                        {member.name}, {calculateAge(member.dateOfBirth)}
+                    <div className='flex'>
+                        <div className='text-2xl'>
+                            {member.name}, {calculateAge(member.dateOfBirth)}
+                        </div>
+                        <div>
+                            <PresenceDot member={member} />
+                        </div>
                     </div>
+
                     <div className='text-sm text-neutral-500'>
                         {member.city}, {member.country}
                     </div>
@@ -43,7 +50,7 @@ export default function MemberSidebar({member, navLinks}: Props) {
                             href={link.href}
                             key={link.href}
                             className={`block rounded 
-                                ${pathname === link.href 
+                                ${pathname === link.href
                                     ? 'text-secondary' : 'hover:text-secondary/50'}`}
                         >
                             {link.name}
