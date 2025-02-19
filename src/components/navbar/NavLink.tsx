@@ -17,7 +17,7 @@ export default function NavLink({ href, label }: Props) {
     return (
         <NavbarItem isActive={pathname === href} as={Link} href={href}>
             <span>{label}</span>
-            {href === '/messages' && (
+            {href === '/messages' && unreadCount > 0 && (
                 <span>({unreadCount})</span>
             )}
         </NavbarItem>

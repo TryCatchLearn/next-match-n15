@@ -5,7 +5,7 @@ import {notFound} from 'next/navigation';
 import {Card} from '@heroui/card';
 
 export default async function Layout({children, params}:
-                                     { children: ReactNode, params: { userId: string } }) {
+                                     { children: ReactNode, params: Promise<{ userId: string }> }) {
     const {userId} = await params;
 
     const member = await getMemberByUserId(userId);

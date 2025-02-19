@@ -1,7 +1,9 @@
+import AppModal from "@/components/AppModal";
 import PresenceAvatar from "@/components/PresenceAvatar";
 import { MessageDto } from "@/lib/types";
 import { truncateString } from "@/lib/util";
-import { Button } from "@heroui/button";
+import { Button, ButtonProps } from "@heroui/button";
+import { useDisclosure } from "@heroui/react";
 import { AiFillDelete } from "react-icons/ai";
 
 type Props = {
@@ -12,8 +14,18 @@ type Props = {
     isDeleting: boolean;
 }
 
-export default function MessageTableCell({item, columnKey, isOutbox, deleteMessage, isDeleting}: Props) {
+export default function MessageTableCell({ item, columnKey, isOutbox, deleteMessage, isDeleting }: Props) {
     const cellValue = item[columnKey as keyof MessageDto];
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const onConfirmDeleteMessage = () => {
+        deleteMessage(item);
+    }
+
+    const footerButtons: ButtonProps[] = [
+        {color: 'default', onClick: onClose, children: 'Cancel'},
+        {color: 'secondary', onClick: onConfirmDeleteMessage, children: 'Confirm'},
+    ]
 
     switch (columnKey) {
         case 'recipientName':
@@ -21,8 +33,8 @@ export default function MessageTableCell({item, columnKey, isOutbox, deleteMessa
             return (
                 <div
                     className='flex items-center gap-2 cursor-pointer'>
-                    <PresenceAvatar 
-                        userId={isOutbox ? item.recipientId : item.senderId }
+                    <PresenceAvatar
+                        userId={isOutbox ? item.recipientId : item.senderId}
                         src={isOutbox ? item.recipientImage : item.senderImage}
                     />
                     <span>{cellValue}</span>
@@ -35,17 +47,29 @@ export default function MessageTableCell({item, columnKey, isOutbox, deleteMessa
                 </div>
             );
         case 'created':
-            return cellValue;
+            return <div>{cellValue}</div>;
         default:
             return (
-                <Button
-                    onPress={() => deleteMessage(item)}
-                    isIconOnly
-                    isLoading={isDeleting}
-                    variant='light'
-                >
-                    <AiFillDelete size={24} className='text-danger'/>
-                </Button>
+                <>
+                    <Button
+                        onPress={() => onOpen()}
+                        isIconOnly
+                        isLoading={isDeleting}
+                        variant='light'
+                    >
+                        <AiFillDelete size={24} className='text-danger' />
+                    </Button>
+                    <AppModal 
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        header="Please confirm this action"
+                        body={<div>
+                            Are you sure you want to delete this message? This cannot be undone
+                        </div>}
+                        footerButtons={footerButtons}
+                    />
+                </>
+
             )
     }
 }
