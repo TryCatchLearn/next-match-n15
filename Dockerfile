@@ -14,17 +14,8 @@ RUN npm ci
 # -------- Build --------
 FROM base AS builder
 
-# Prisma + Next require env at build time
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Prisma steps (prod-safe)
-RUN npx prisma generate
-RUN npx prisma migrate deploy
-RUN npx prisma db seed
 
 # Next build
 RUN npm run build
