@@ -57,4 +57,4 @@ EXPOSE 3000
 
 # Use shell form for CMD to allow multiple commands via '&&'
 # This runs migrations and seeds EVERY time the container starts/restarts
-CMD npx prisma migrate deploy && npx prisma db seed && node server.js
+CMD npx prisma@6 migrate deploy && npx prisma@6 db seed && node server.js
