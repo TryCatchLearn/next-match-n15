@@ -49,7 +49,7 @@ async function seedAdmin() {
 }
 
 async function main() {
-    if (process.env.RUN_SEED === 'true' || process.env.NODE_ENV === 'development') {
+    if (process.env.RUN_SEED === 'true') {
         await seedMembers();
         await seedAdmin();
     }
