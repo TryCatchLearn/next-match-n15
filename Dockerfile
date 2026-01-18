@@ -49,6 +49,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # --- PRISMA ADDITIONS ---
 # Copy the prisma directory so migrations and seed script are available
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
+# Copy node_modules to include tsx and other dependencies needed for seeding
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Copy package.json for prisma seed configuration
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 # ------------------------
 
 USER nextjs
@@ -57,4 +63,4 @@ EXPOSE 3000
 
 # Use shell form for CMD to allow multiple commands via '&&'
 # This runs migrations and seeds EVERY time the container starts/restarts
-CMD npx prisma@6 migrate deploy && npx prisma@6 db seed && node server.js
+CMD npx prisma migrate@6 deploy && node server.js
