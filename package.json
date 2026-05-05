@@ -19,7 +19,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.0.6",
-    "next": "15.1.6",
+    "next": "15.1.11",
     "next-auth": "^5.0.0-beta.25",
     "next-cloudinary": "^6.16.0",
     "pusher": "^5.2.0",
